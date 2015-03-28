@@ -20,9 +20,7 @@
 #include "mp3_given.h"
 #include "structure.h"		/* Defining the state enum and the process control block structures */
 #include "linklist.h"
-#include "thread.h"
-// global variables
-ulong initial_jiffies, curr_jiffies;
+
 /* Pointer to the currently running task */
 procfs_entry *newproc = NULL;
 procfs_entry *newdir = NULL;
@@ -34,7 +32,7 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 	
 	pid_t pid;
 	char *proc_buffer;
-	char *pid_str = NULL, *period_str = NULL, *computation_str = NULL, *end;
+	char *pid_str = NULL, *end;
 	my_process_entry *entry_temp;
 	ulong ret = 0;
 
@@ -79,18 +77,7 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 				kfree(entry_temp);
 				return -EFAULT;
 			}
-			if((ret = kstrtoul(period_str, 10, &(entry_temp->period))) == -1) {
-				printk(KERN_ALERT "ERROR IN PERIOD TO STRING CONVERSION\n");
-				kfree(proc_buffer);
-				kfree(entry_temp);
-				return -EFAULT;
-			}
-			if((ret = kstrtoul(computation_str, 10, &(entry_temp->computation))) == -1) {
-				printk(KERN_ALERT "ERROR IN COMPUTATION TO STRING CONVERSION\n");
-				kfree(proc_buffer);
-				kfree(entry_temp);
-				return -EFAULT;
-			}
+			
 		
 			/* We directly dont modify the process control block or PCB of the newly admitted process rather we keep a pointer 
 			   to the PCB of the newly admitted process as suggested in the MP doc. We use the find_task_by_pid() function provided
@@ -102,10 +89,10 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 				printk(KERN_INFO "=== task retuened empty\n");
 			}
 			
-			ll_add_task(entry_temp);
-			if(ll_get_size() == 1){
+			//ll_add_task(entry_temp);
+			/*if(ll_get_size() == 1){
 				//initialize workqueue and timer
-			}
+			}*/
 			
 			break;
 		
@@ -113,11 +100,11 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 		case 'D':
 			printk(KERN_INFO "ENTERING DE-REGISTRATION\n");
 			/* Check if list is empty before deregistration */
-			if(ll_get_size() == 0) {
+			/*if(ll_get_size() == 0) {
 				printk(KERN_ALERT "PROCESS LIST IS EMPTY\n");
 				kfree(proc_buffer);
 				return -EFAULT;
-			}
+			}*/
 			pid_str = proc_buffer + 2;
 			printk(KERN_INFO "PID from D: %s\n", pid_str);
 			if((ret = kstrtoint(pid_str, 10, &pid)) == -1) {
@@ -126,9 +113,7 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 				return -EFAULT;
 			}
 
-			curr_jiffies = jiffies;
-			printk(KERN_INFO "RMS Scheduler removing Process PID: %d at %u us\n", pid, jiffies_to_usecs(curr_jiffies));
-			if(ll_remove_task(pid) != SUCCESS) {
+			/*if(ll_remove_task(pid) != SUCCESS) {
 				printk(KERN_INFO "DEREGISTERING PROCESS: %d FAILED\n", pid);
 				kfree(proc_buffer);
 				return -EFAULT;
@@ -136,7 +121,7 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 			
 			if(ll_get_size() == 0){
 				//delete workqueue and timer			
-			}
+			}*/
 			break;
 
 		default:
@@ -159,7 +144,7 @@ static ssize_t procfile_read (struct file *file, char __user *buffer, size_t cou
 	ssize_t len = count, retVal = 0;
 
 	printk(KERN_INFO "PROCFILE READ /proc/mp3/status CALLED\n");
-	ll_generate_proc_info_string(&read_buf,&buf_size);
+	//ll_generate_proc_info_string(&read_buf,&buf_size);
 	printk(KERN_INFO "*data = %d, buf_size = %d, count = %ld", (int)(*data), buf_size, count);
 	if(*data >= buf_size) {
 		kfree(read_buf);
@@ -218,7 +203,7 @@ static int __init mp3_init(void) {
 	printk("MP3 MODULE LOADING");
 	printk("MODULE INIT CALLED");
 	newentry = proc_filesys_entries("status", "mp3");
-	ll_initialize_list(); 
+	//ll_initialize_list(); 
 	printk("MP3 MODULE LOADED");
 	return 0;
 }
@@ -226,8 +211,7 @@ static int __init mp3_init(void) {
 static void __exit mp3_exit(void) {
 	printk("MP3 MODULE UNLOADING");
 	remove_entry("status", "mp3");
-	thread_cleanup();
-	ll_cleanup();
+	//ll_cleanup();
 	printk("MP3 MODULE UNLOADED");
 }
 

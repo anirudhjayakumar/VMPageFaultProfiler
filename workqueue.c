@@ -9,7 +9,9 @@
 #include "linklist.h"
 #include <linux/sched.h>
 #include <linux/fs_struct.h>
-#define find_task_by_pid(nr) pid_task(find_vpid(nr), PIDTYPE_PID)
+//#include "mp3_given.h"
+//#define find_task_by_pid(nr) pid_task(find_vpid(nr), PIDTYPE_PID)
+
 static struct timer_list intr_timer;
 
 /*Work Queue:- my_wq*/
@@ -21,25 +23,6 @@ void modify_timer(void)
 {
 	mod_timer(&intr_timer, jiffies+5*HZ);	
 }
-//THIS FUNCTION RETURNS 0 IF THE PID IS VALID AND THE CPU TIME IS SUCCESFULLY RETURNED BY THE PARAMETER CPU_USE. OTHERWISE IT RETURNS -1
-int get_cpu_use(int pid, unsigned long *cpu_use)
-{
-   struct task_struct* task;
-   rcu_read_lock();
-   task=find_task_by_pid(pid);
-   if (task!=NULL)
-   {  
-	*cpu_use=task->utime;
-        rcu_read_unlock();
-        return SUCCESS;
-   }
-   else 
-   {
-     rcu_read_unlock();
-     return FAIL;
-   }
-}
-
 
 //Work handler to update CPU time in Linked List
 void work_handler( struct work_struct *work )
@@ -63,7 +46,7 @@ void work_handler( struct work_struct *work )
 
 		pid = pids[index];
 
-		if( get_cpu_use(pid,&cpu_time) == SUCCESS )
+		/*if( get_cpu_use(pid,&cpu_time) == SUCCESS )
 		{
 			//printk(KERN_INFO "PID: %d CPU TIME: %lu\n", pid,cpu_time);
 			//todo
@@ -74,7 +57,7 @@ void work_handler( struct work_struct *work )
 			//printk(KERN_INFO "get_cpu_use() failed");
 			//todo
 			//ll_delete_pid(pid);
-		}
+		}*/
 	}
 	
 	kfree(pids);
