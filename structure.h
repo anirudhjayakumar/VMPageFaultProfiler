@@ -4,6 +4,10 @@
 #include <linux/types.h>
 #include <linux/sched.h>
 
+#define SUCCESS 0
+#define FAIL    1
+
+
 /*
 enum States {
 	SLEEPING,	// 0
