@@ -8,17 +8,19 @@ RM:=rm
 
 .PHONY : clean
 
-all: clean modules process
+all: clean modules monitor worker
 
-
-mp2_final-objs := mp3.o
+obj-m += mp3_final.o
+mp3_final-objs := linklist.o mem.o char_dev.o workqueu.o mp3.o
 
 modules:
 	$(MAKE) -C $(KERNEL_SRC) M=$(SUBDIR)  modules
 
-process: process.c
+monitor: monitor.c
 	$(GCC) -o $@ $^ -g -O0
 
+worker: work.c
+	$(GCC) -o $@ $^ -g -O0
 
 #my_factorial: my_factorial.c my_factorial.h
 #	$(GCC) -o $@ $^ -g -O0
@@ -36,4 +38,4 @@ process: process.c
 #	$(GCC) -o $@ $^ -g -O0
 
 clean:
-	$(RM) -f process *~ *.ko *.o *.mod.c Module.symvers modules.order
+	$(RM) -f monitor worker *~ *.ko *.o *.mod.c Module.symvers modules.order
