@@ -13,13 +13,11 @@ int ll_initialize_list(void);
 
 int ll_add_task(my_process_entry *proc);
 
-ulong ll_get_curr_utilization(void);
 
 int ll_remove_task(pid_t pid);
 
 int ll_get_size(void);
 
-int ll_find_high_priority_task(my_process_entry **proc);
 
 int ll_cleanup(void);
 

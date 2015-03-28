@@ -5,7 +5,7 @@
 #include<linux/jiffies.h>
 #include<linux/mutex.h>
 #include <linux/pid.h>
-#include "common.h"
+#include "structure.h"
 #include "linklist.h"
 #include <linux/sched.h>
 #include <linux/fs_struct.h>
@@ -52,7 +52,11 @@ void work_handler( struct work_struct *work )
 	/*Insert code here for updation of CPU Time*/
     // get the pids
 	//printk(KERN_INFO "work handler called\n");
-	ll_get_pids(&pids,&count);
+	
+	//todo
+	//ll_get_pids(&pids,&count);
+	
+	
 	//printk(KERN_INFO "PID count = %d", count);
     for (index = 0; index <count; ++index)
 	{
@@ -62,12 +66,14 @@ void work_handler( struct work_struct *work )
 		if( get_cpu_use(pid,&cpu_time) == SUCCESS )
 		{
 			//printk(KERN_INFO "PID: %d CPU TIME: %lu\n", pid,cpu_time);
-			ll_update_time(pid,jiffies_to_msecs(cputime_to_jiffies(cpu_time))); 
+			//todo
+			//ll_update_time(pid,jiffies_to_msecs(cputime_to_jiffies(cpu_time))); 
 		}
 		else
 		{ 
 			//printk(KERN_INFO "get_cpu_use() failed");
-			ll_delete_pid(pid);
+			//todo
+			//ll_delete_pid(pid);
 		}
 	}
 	
@@ -96,9 +102,10 @@ void timer_callback(unsigned long data){
 	//printk(KERN_INFO "timer call work\n");
 	queue_work( my_wq, work );
 	printk(KERN_INFO "modify timer\n");
-	if((ll_list_size())>0){
+	//todo
+	/*if((ll_list_size())>0){
 		mod_timer(&intr_timer,jiffies+5*HZ);
-	}
+	}*/
 	//mod_timer(&intr_timer,jiffies+5*HZ);
 }
 /* Function to Initialize Timer*/

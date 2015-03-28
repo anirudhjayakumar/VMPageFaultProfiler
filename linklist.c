@@ -34,17 +34,6 @@ int ll_add_task(my_process_entry *new_proc)
 	return SUCCESS;
 }
 
-ulong ll_get_curr_utilization(void)
-{   
-	ulong util = 0;
-	my_process_entry *proc_iter = NULL;
-    down_read(sem);	
-	list_for_each_entry(proc_iter,&proc_list.list,list) {
-		util+= (proc_iter->computation*1000) / proc_iter->period;
-	}
-    up_read(sem);
-	return util;
-}
 
 int ll_remove_task(pid_t pid)
 {
@@ -78,32 +67,13 @@ int ll_print_list(void)
 	my_process_entry *proc_iter = NULL;
     down_read(sem);	
 	list_for_each_entry(proc_iter,&proc_list.list,list) {
-		printk(KERN_INFO "print: pid:%d period:%lu status:%d\n", proc_iter->pid, proc_iter->period, proc_iter->state); 
+		//todo
+		//printk(KERN_INFO "print: pid:%d period:%lu status:%d\n", proc_iter->pid, proc_iter->period, proc_iter->state); 
 	}
     up_read(sem);
     return SUCCESS;
 }
 
-int ll_find_high_priority_task(my_process_entry **proc)
-{
-	
-    my_process_entry *proc_iter = NULL;
-ulong min_period = ULONG_MAX;
-*proc = NULL;
-    down_read(sem);	
-	
-	list_for_each_entry(proc_iter,&proc_list.list,list) {
-		if(proc_iter->state == READY && proc_iter->period < min_period)
-		{
-			printk(KERN_INFO "high priority: pid:%d\n", proc_iter->pid); 
-        		min_period = proc_iter->period;
-			*proc = proc_iter;
-		}
-	}
-    up_read(sem);
-    if(*proc == NULL) return FAIL;
-	else return SUCCESS;
-}
 
 int ll_cleanup(void)
 {
@@ -146,8 +116,9 @@ int ll_generate_proc_info_string(char **buf, unsigned int *size)
     *buf = (char *)kmalloc(BUF_SIZE,GFP_KERNEL);
 	down_read(sem);	
 	list_for_each_entry(proc_iter,&proc_list.list,list) {
-		count += sprintf(*buf+count,"%d,%lu,%lu\n",
-		proc_iter->pid,proc_iter->period,proc_iter->computation);
+		// todo
+		//count += sprintf(*buf+count,"%d,%lu,%lu\n",
+		//proc_iter->pid,proc_iter->period,proc_iter->computation);
 	}
     up_read(sem);
     (*buf)[count] = '\0';

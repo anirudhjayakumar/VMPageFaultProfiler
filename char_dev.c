@@ -1,26 +1,26 @@
 #include "char_dev.h"
 
-int cd_initialize()
+int cd_initialize(void)
 {
 	return SUCCESS;
 }
 
-int cd_cleanup()
+int cd_cleanup(void)
 {
 	return SUCCESS;
 }
 
-int open()
+int open(void)
 {
 	return SUCCESS;
 }
 
-int close()
+int close(void)
 {
 	return SUCCESS;
 }
 
-int mmap()
+int mmap(void)
 {
 	return SUCCESS;
 }

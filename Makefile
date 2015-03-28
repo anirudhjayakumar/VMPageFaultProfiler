@@ -11,7 +11,7 @@ RM:=rm
 all: clean modules monitor worker
 
 obj-m += mp3_final.o
-mp3_final-objs := linklist.o mem.o char_dev.o workqueu.o mp3.o
+mp3_final-objs := linklist.o mem.o char_dev.o workqueue.o mp3.o
 
 modules:
 	$(MAKE) -C $(KERNEL_SRC) M=$(SUBDIR)  modules
