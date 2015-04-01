@@ -22,6 +22,7 @@
 #include "workqueue.h"
 #include "linklist.h"
 #include <linux/pid.h>
+#include "mem.h"
 /* Pointer to the currently running task */
 procfs_entry *newproc = NULL;
 procfs_entry *newdir = NULL;
@@ -249,6 +250,11 @@ static int __init mp3_init(void) {
 	printk("MODULE INIT CALLED");
 	newentry = proc_filesys_entries("status", "MP3"); 
 	printk("PAGE SIZE = %lu\n",PAGE_SIZE);
+    
+	ll_initialize_list();
+	wq_init_workqueue();
+    mm_initialize();
+
 	printk("MP3 MODULE LOADED");
 	return 0;
 }
@@ -256,6 +262,9 @@ static int __init mp3_init(void) {
 static void __exit mp3_exit(void) {
 	printk("MP3 MODULE UNLOADING");
 	remove_entry("status", "MP3");
+	mm_cleanup();
+	wq_cleanup_workqueue();
+    ll_cleanup();
 	printk("MP3 MODULE UNLOADED");
 }
 
