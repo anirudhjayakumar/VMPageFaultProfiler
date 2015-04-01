@@ -6,28 +6,30 @@
 
 #define SUCCESS 0
 #define FAIL    1
+#define TRUE    1
+#define FALSE   0
 
-
-/*
-enum States {
-	SLEEPING,	// 0
-	READY,		// 1
-	RUNNING,	// 2
-};
-*/
 typedef unsigned long ulong;
 
+typedef struct sample {
+    ulong jiff_value;
+	ulong min_flt;
+	ulong maj_flt;
+    ulong cpu_util;
+} sampling_data;
 
-typedef struct process_entry {
+struct process_info {
 	/* Data Structure elements */		/* Data Strcuture element explnation */
 	int pid;				// Process ID
 	struct timer_list mytimer;		// Timer for wakingup
 	struct task_struct *task;		// Linux task pointer
 	struct list_head list;
-	unsigned long proc_utilization;
-	unsigned long minor_fault_count;
-	unsigned long major_fault_count;
-} my_process_entry;
+	ulong start_jiff;
+	ulong last_sample_jiff;
+	ulong min_flt;
+	ulong maj_flt;
+	ulong cpu_util; // utime + stime
+};
 
 typedef struct proc_dir_entry procfs_entry;
 
