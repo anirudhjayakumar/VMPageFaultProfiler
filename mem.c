@@ -1,8 +1,5 @@
 #include "mem.h"
 #include "structure.h"
-#define MMAP_BUF_SIZE (128 * PAGE_SIZE)
-#define MAX_SAMPLES 12000
-
 char *mmap_buf = NULL;
 int mem_index = 0;
 
