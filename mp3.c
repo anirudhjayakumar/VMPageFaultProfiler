@@ -74,7 +74,7 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 	
 	pid_t pid;
 	char *proc_buffer;
-	char *pid_str = NULL, *end;
+	char *pid_str = NULL;
 	struct process_info *entry_temp;
 	ulong ret = 0;
 
@@ -135,7 +135,8 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 			}
 			
 			ll_add_task(entry_temp);
-			if(ll_list_size() == 1){
+			if(ll_list_size() == 1) {
+				printk(KERN_INFO "Added first process. Now creating workqueue\n");
 				wq_create_workqueue(); //creates work and  workqueus
 				wq_modify_timer(); // starttimer
 			}
@@ -162,7 +163,6 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 			if(ll_delete_item(pid) != SUCCESS) {
 				printk(KERN_INFO "DEREGISTERING PROCESS: %d FAILED\n", pid);
 				kfree(proc_buffer);
-				return -EFAULT;
 			}
 			
 			if(ll_list_size() == 0){
@@ -264,7 +264,7 @@ static void __exit mp3_exit(void) {
 	remove_entry("status", "mp3");
 	mm_cleanup();
 	wq_cleanup_workqueue();
-    	ll_cleanup();
+    ll_cleanup();
 	cd_cleanup();
 	printk("MP3 MODULE UNLOADED");
 }

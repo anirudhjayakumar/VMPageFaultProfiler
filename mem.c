@@ -32,6 +32,8 @@ int mm_add_data(sampling_data *data)
 		item->maj_flt = data->maj_flt;
 		item->cpu_util  = data->cpu_util;
 		mem_index++; 
+		if((mem_index % 10) == 0)
+			printk(KERN_INFO "Sample count %d added\n", mem_index);
 	}
 	return SUCCESS;
 }

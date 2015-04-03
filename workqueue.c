@@ -62,7 +62,7 @@ void work_handler( struct work_struct *work )
 		}
 		else
 		{ 
-			//printk(KERN_INFO "get_cpu_use() failed");
+			printk(KERN_INFO "get_cpu_use() failed. deleting process from list\n");
 			ll_delete_item(pid);
 		}
 	}

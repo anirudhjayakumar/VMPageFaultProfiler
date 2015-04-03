@@ -66,7 +66,7 @@ int cd_initialize(void)
 		printk(KERN_INFO "Error creating character device file");
 		return FAIL;
 	}
-	printk(KERN_INFO "character device created ");	
+	printk(KERN_INFO "character device created\n");	
 
 	//creating device class
 	if((c = class_create(THIS_MODULE, "mp3_class")) == NULL){
@@ -88,6 +88,8 @@ int cd_initialize(void)
 		printk(KERN_INFO "Error adding character device");
 		return FAIL;
 	}
+
+	printk (KERN_INFO "Added Char Dev to system\n");
 	return SUCCESS;
 }
 
