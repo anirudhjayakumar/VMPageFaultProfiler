@@ -23,6 +23,8 @@
 #include "linklist.h"
 #include <linux/pid.h>
 #include "mem.h"
+#include "char_dev.h"
+
 /* Pointer to the currently running task */
 procfs_entry *newproc = NULL;
 procfs_entry *newdir = NULL;
@@ -253,8 +255,8 @@ static int __init mp3_init(void) {
     
 	ll_initialize_list();
 	wq_init_workqueue();
-    mm_initialize();
-
+    	mm_initialize();
+	cd_initialize();
 	printk("MP3 MODULE LOADED");
 	return 0;
 }
@@ -264,7 +266,8 @@ static void __exit mp3_exit(void) {
 	remove_entry("status", "MP3");
 	mm_cleanup();
 	wq_cleanup_workqueue();
-    ll_cleanup();
+    	ll_cleanup();
+	cd_cleanup();
 	printk("MP3 MODULE UNLOADED");
 }
 
