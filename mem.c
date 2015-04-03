@@ -19,18 +19,20 @@ int mm_initialize(void)
 
 int mm_add_data(sampling_data *data)
 {
-	sampling_data *item = NULL;
-	if (!data)
-	{
-		printk(KERN_INFO "mm_add_data: data is NULL\n");
-		return FAIL;
+	if(mem_index < MAX_SAMPLES) {
+		sampling_data *item = NULL;
+		if (!data)
+		{
+			printk(KERN_INFO "mm_add_data: data is NULL\n");
+			return FAIL;
+		}
+		item 	= (sampling_data *)(mmap_buf + mem_index*sizeof(sampling_data));
+		item->jiff_value        = data->jiff_value;
+		item->min_flt = data->min_flt;
+		item->maj_flt = data->maj_flt;
+		item->cpu_util  = data->cpu_util;
+		mem_index++; 
 	}
-	item 	= (sampling_data *)(mmap_buf + mem_index*sizeof(sampling_data));
-	item->jiff_value        = data->jiff_value;
-	item->min_flt = data->min_flt;
-	item->maj_flt = data->maj_flt;
-	item->cpu_util  = data->cpu_util;
-	mem_index = (mem_index + 1)%MAX_SAMPLES; 
 	return SUCCESS;
 }
 
