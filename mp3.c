@@ -98,8 +98,6 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 			
 			printk(KERN_INFO "Registering process\n");
 			pid_str = proc_buffer + 2;
-			end = strstr(proc_buffer + 2, " ");
-			*end = '\0';
 			printk(KERN_INFO "PROC_INFO:%s\n",pid_str);
 			
 			/* Creating a temporary entry in kernel space to hold the new requesting process */
@@ -145,7 +143,7 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 			break;
 		
 
-		case 'D':
+		case 'U':
 			printk(KERN_INFO "ENTERING DE-REGISTRATION\n");
 			/* Check if list is empty before deregistration */
 			if(ll_list_size() == 0) {
@@ -250,7 +248,7 @@ static void remove_entry(char *procname, char *parent) {
 static int __init mp3_init(void) {
 	printk("MP3 MODULE LOADING");
 	printk("MODULE INIT CALLED");
-	newentry = proc_filesys_entries("status", "MP3"); 
+	newentry = proc_filesys_entries("status", "mp3"); 
 	printk("PAGE SIZE = %lu\n",PAGE_SIZE);
     
 	ll_initialize_list();
@@ -263,7 +261,7 @@ static int __init mp3_init(void) {
 
 static void __exit mp3_exit(void) {
 	printk("MP3 MODULE UNLOADING");
-	remove_entry("status", "MP3");
+	remove_entry("status", "mp3");
 	mm_cleanup();
 	wq_cleanup_workqueue();
     	ll_cleanup();
