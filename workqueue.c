@@ -49,16 +49,16 @@ void work_handler( struct work_struct *work )
 		pid = pids[index];
         ll_get_last_sample_jiff(pid,&prev_jiff);
 		// get statistics of each process
+		curr_jiff = jiffies;
 		if( get_cpu_use(pid,&min_flt,&maj_flt,&utime,&stime) == 0 )
 		{
 			// add up the numbers
-			curr_jiff = jiffies;
 			sample.min_flt += min_flt;
 			sample.maj_flt += maj_flt;
 			// floating point is costly. Utilization will be out of 1000
-			sample.cpu_util += (utime+stime)*1000/(curr_jiff-prev_jiff);
+			sample.cpu_util += (cputime_to_jiffies(utime+stime)*1000)/(curr_jiff-prev_jiff);
 			// update individual process information
-	        ll_update_item(pid,min_flt,maj_flt,utime+stime,curr_jiff); 
+	        ll_update_item(pid,min_flt,maj_flt,cputime_to_jiffies(utime+stime),curr_jiff); 
 		}
 		else
 		{ 
@@ -103,12 +103,18 @@ int wq_create_workqueue(void)
 
 void wq_destroy_workqueue(void)
 {
-	cancel_work_sync(work);
-	kfree(work);
-	work = NULL;
-	flush_workqueue(my_wq);
-	destroy_workqueue(my_wq);
-	my_wq = NULL;
+	if(work)
+	{
+		cancel_work_sync(work);
+		kfree(work);
+		work = NULL;
+	}
+	if(my_wq) 
+	{
+		flush_workqueue(my_wq);
+		destroy_workqueue(my_wq);
+		my_wq = NULL;
+	}
 }
 
 void timer_callback(unsigned long data){

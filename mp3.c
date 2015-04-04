@@ -77,11 +77,12 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 	char *pid_str = NULL;
 	struct process_info *entry_temp;
 	ulong ret = 0;
-
+    printk (KERN_INFO "Entering procfile_write()\n");
 	/* Calling process passes the PID in the string format */
 	proc_buffer = (char *)kmalloc(count + 1, GFP_KERNEL);
 	if(copy_from_user(proc_buffer, buffer, count)) {
 		kfree(proc_buffer);
+		printk(KERN_INFO "copy_from_user() failed\n");
 		return -EFAULT;
 	}
 	/* Terminate with a NULL charecter to make it a C string */
@@ -166,7 +167,8 @@ static ssize_t procfile_write(struct file *file, const char __user *buffer, size
 			}
 			
 			if(ll_list_size() == 0){
-				wq_destroy_workqueue();				
+				wq_destroy_workqueue();
+                mm_set_mem_index();    
 			}
 			break;
 

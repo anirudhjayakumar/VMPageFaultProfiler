@@ -33,7 +33,13 @@ int mm_add_data(sampling_data *data)
 		item->cpu_util  = data->cpu_util;
 		mem_index++; 
 		if((mem_index % 10) == 0)
-			printk(KERN_INFO "Sample count %d added\n", mem_index);
+			printk(KERN_INFO "Sample:%d,%lu,%lu,%lu,%lu\n", mem_index-1,item->jiff_value,item->min_flt,item->maj_flt,item->cpu_util);
+       if(mem_index < MAX_SAMPLES)
+		{
+			item    = (sampling_data *)(mmap_buf + mem_index*sizeof(sampling_data));
+			item->jiff_value = -1;
+		}
+
 	}
 	return SUCCESS;
 }
@@ -51,4 +57,9 @@ int mm_cleanup(void)
 		vfree(mmap_buf);
 	}
 	return SUCCESS;
+}
+
+void mm_set_mem_index(void)
+{
+	mem_index = 0;
 }

@@ -9,5 +9,6 @@
 int mm_initialize(void);
 int mm_add_data(sampling_data *data);
 void* mm_get_buffer(void);
+void mm_set_mem_index(void);
 int mm_cleanup(void);
 #endif //MEM_H

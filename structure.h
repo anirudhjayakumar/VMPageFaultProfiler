@@ -21,7 +21,6 @@ typedef struct sample {
 struct process_info {
 	/* Data Structure elements */		/* Data Strcuture element explnation */
 	int pid;				// Process ID
-	struct timer_list mytimer;		// Timer for wakingup
 	struct task_struct *task;		// Linux task pointer
 	struct list_head list;
 	ulong start_jiff;

@@ -54,7 +54,8 @@ static struct file_operations fops =
 {
 	.open = open,
 	.release = close,
-	.mmap = mmap_callback
+	.mmap = mmap_callback,
+	.owner = THIS_MODULE
 };
 
 

@@ -153,7 +153,6 @@ int ll_delete_item(int pid)
 	list_for_each_entry(proc_iter,&proc_list.list,list) {
 		if (proc_iter->pid == pid )
 		{
-			del_timer(&(proc_iter->mytimer));
 			list_del(&proc_iter->list);
 			kfree(proc_iter);
 			list_size--;
